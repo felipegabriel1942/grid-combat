@@ -1,36 +1,36 @@
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using GridCombat.Units;
+using GridCombat.Units.Enemy;
 
 namespace GridCombat.Components;
 
 public partial class EnemyIA : Node
 {
 
-    private Unit _parent;
+    private Enemy _parent;
 
     public override void _Ready()
     {
-        _parent = GetParent<Unit>();
+        _parent = GetParent<Enemy>();
     }
     
-    // private Unit GetTargetUnit()
-    // {
-    //     var targets = [];
+    public Unit GetTargetUnit()
+    {
+        var targets = _parent.PlayerGroup.Units;
 
-    //     targets.Sort((a, b) =>
-    //         {
-    //             return a.Position
-    //                     .DistanceTo(SelectedUnit.Position)
-    //                     .CompareTo(b.Position.DistanceTo(SelectedUnit.Position));
+        targets.Sort((a, b) =>
+            {
+                return a.Position
+                        .DistanceTo(_parent.GlobalPosition)
+                        .CompareTo(b.Position.DistanceTo(_parent.GlobalPosition));
 
-    //         });
+            });
         
-    //     return targets.First();
-    // }
+        return targets.First();
+    }
 
-    private Vector2? GetReachableCellClosestToTarget(Unit target)
+    public Vector2 GetReachableCellClosestToTarget(Unit target)
     {
         var currentPos = _parent.GridManager.LocalToMap(_parent.GlobalPosition);
         var targetPos = _parent.GridManager.LocalToMap(target.GlobalPosition);
@@ -39,10 +39,10 @@ public partial class EnemyIA : Node
             .Skip(1)
             .Select(_parent.GridManager.LocalToMap);
         
-        var movableTiles = _parent.GridManager.GetMovableCellsInRange(_parent.GridManager.LocalToMap(_parent.GlobalPosition), 1);
+        var movableTiles = _parent.GridManager.GetMovableCellsInRange(_parent.GlobalPosition, 1);
 
         var closest = path.LastOrDefault(movableTiles.Contains);
 
-        return closest == default ? null : _parent.GridManager.MapToLocal(closest);
+        return closest == default ? new Vector2(-1, -1) : _parent.GridManager.MapToLocal(closest);
     }
 }

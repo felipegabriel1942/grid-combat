@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://ojoxrxai1hpc"]
+
+[ext_resource type="PackedScene" uid="uid://jcvdtdlhuaqy" path="res://Units/Unit.tscn" id="1_w4yh8"]
+[ext_resource type="Script" uid="uid://lf4vxsyc5h6u" path="res://Units/Enemy/Enemy.cs" id="2_x5dd3"]
+[ext_resource type="PackedScene" uid="uid://dw2kqe8bh7n44" path="res://Components/EnemyIA.tscn" id="3_ci7i8"]
+
+[node name="Enemy" instance=ExtResource("1_w4yh8")]
+script = ExtResource("2_x5dd3")
+
+[node name="EnemyIA" parent="." index="0" instance=ExtResource("3_ci7i8")]

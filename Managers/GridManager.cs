@@ -67,7 +67,6 @@ public partial class GridManager : Node
                         // 3. Optional: Calculate distance for circular/Manhattan range
                         if (Mathf.Abs(x - LocalToMap(center).X) + Mathf.Abs(y - LocalToMap(center).Y) <= range)
                         {
-                            GD.Print(cell);
                             reachableCells.Add(cell);
                         }
                     }

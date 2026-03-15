@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://bg4ucri4ny6ej"]
+[gd_scene load_steps=11 format=4 uid="uid://bg4ucri4ny6ej"]
 
 [ext_resource type="Script" uid="uid://456hvqrhewbv" path="res://Scenes/Level.cs" id="1_ienac"]
 [ext_resource type="PackedScene" uid="uid://bwmrkubjy4ns7" path="res://Managers/GridManager.tscn" id="2_5rrr5"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cdqirm784ymbw" path="res://Units/Player/Infantary.tscn" id="3_tj5wv"]
 [ext_resource type="Script" uid="uid://0ynjk4q684ns" path="res://Managers/UnitGroupManager.cs" id="5_or7tv"]
 [ext_resource type="PackedScene" uid="uid://duggqhxescine" path="res://UI/SelectionCursor.tscn" id="8_5rrr5"]
+[ext_resource type="PackedScene" uid="uid://kmjwaid8ucsk" path="res://Units/Enemy/EnemyInfantary.tscn" id="8_or7tv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xylue"]
 texture = ExtResource("2_8rbpu")
@@ -83,3 +84,21 @@ HighlightManager = NodePath("../../../HighlightManager")
 [node name="EnemyGroup" type="Node2D" parent="Units"]
 unique_name_in_owner = true
 script = ExtResource("5_or7tv")
+
+[node name="EnemyInfantary" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
+position = Vector2(32, 0)
+PlayerGroup = NodePath("../../PlayerGroup")
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")
+
+[node name="EnemyInfantary2" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
+position = Vector2(48, 0)
+PlayerGroup = NodePath("../../PlayerGroup")
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")
+
+[node name="EnemyInfantary3" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
+position = Vector2(64, 0)
+PlayerGroup = NodePath("../../PlayerGroup")
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")

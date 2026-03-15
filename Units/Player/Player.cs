@@ -31,7 +31,23 @@ public partial class Player : Unit
         }
     }
 
-    public override Vector2 GetTargetPosition()
+    public override void Move()
+    {
+       var targetCell = GetTargetPosition();
+
+       if (targetCell.X >= 0 && targetCell.Y >= 0)
+        {
+            GridManager.SetCellAsFree(GlobalPosition);
+            _movementComponent.Move(targetCell);
+            GridManager.SetCellAsOccupied(targetCell);
+            EmitSignal(Unit.SignalName.UnitHasMoved);
+            GameEvents.EmitUnitMoved(this);
+            _isSelected = false;
+            GameEvents.EmitClearHighlights();
+        }
+    }
+
+    private Vector2 GetTargetPosition()
     {
         var targetPos = GridManager.GetMousePosition();
 

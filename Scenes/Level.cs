@@ -15,8 +15,8 @@ public partial class Level : Node2D
 
     public Unit SelectedUnit {private set; get; }
     
-    private UnitGroupManager _playerGroup;
-    private UnitGroupManager _enemyGroup;
+    public UnitGroupManager PlayerGroup;
+    public UnitGroupManager EnemyGroup;
     private GridManager _gridManager;
     private SelectionCursor _selectionCursor;
     private BattleStateMachine _battleStateMachine;
@@ -25,14 +25,14 @@ public partial class Level : Node2D
     public override void _Ready()
     {
         _gridManager = GetNode<GridManager>("%GridManager");
-        _playerGroup = GetNode<UnitGroupManager>("%PlayerGroup");
-        _enemyGroup = GetNode<UnitGroupManager>("%EnemyGroup");
+        PlayerGroup = GetNode<UnitGroupManager>("%PlayerGroup");
+        EnemyGroup = GetNode<UnitGroupManager>("%EnemyGroup");
 
         _battleStateMachine = new BattleStateMachine(this);
         _battleStateMachine.ChangeState(new PlayerTurnState(this));
 
-        _playerGroup.AllUnitsMoved += OnAllPlayerUnitsMoved;
-        _enemyGroup.AllUnitsMoved += OnAllEnemyUnitsMoved;
+        PlayerGroup.AllUnitsMoved += OnAllPlayerUnitsMoved;
+        EnemyGroup.AllUnitsMoved += OnAllEnemyUnitsMoved;
 
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitSelected, Callable.From<Unit>(OnUnitSelected));
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitMoved, Callable.From<Unit>(OnUnitMoved));
@@ -46,11 +46,15 @@ public partial class Level : Node2D
     private void OnAllEnemyUnitsMoved()
     {
         GD.Print("All enemy units have moved.");
+
+        _battleStateMachine.ChangeState(new PlayerTurnState(this));
     }
 
     private void OnAllPlayerUnitsMoved()
     {
         GD.Print("All player units have moved.");
+
+        _battleStateMachine.ChangeState(new EnemyTurnState(this));
     }
 
     public override void _UnhandledInput(InputEvent @event)
