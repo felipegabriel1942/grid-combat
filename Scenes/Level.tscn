@@ -1,0 +1,85 @@
+[gd_scene load_steps=10 format=4 uid="uid://bg4ucri4ny6ej"]
+
+[ext_resource type="Script" uid="uid://456hvqrhewbv" path="res://Scenes/Level.cs" id="1_ienac"]
+[ext_resource type="PackedScene" uid="uid://bwmrkubjy4ns7" path="res://Managers/GridManager.tscn" id="2_5rrr5"]
+[ext_resource type="Texture2D" uid="uid://5u5rcabrqjy2" path="res://Assets/Tilemaps/Tilemap2.png" id="2_8rbpu"]
+[ext_resource type="PackedScene" uid="uid://d3kml02k4iqpj" path="res://Managers/HighlightManager.tscn" id="3_ienac"]
+[ext_resource type="PackedScene" uid="uid://cdqirm784ymbw" path="res://Units/Player/Infantary.tscn" id="3_tj5wv"]
+[ext_resource type="Script" uid="uid://0ynjk4q684ns" path="res://Managers/UnitGroupManager.cs" id="5_or7tv"]
+[ext_resource type="PackedScene" uid="uid://duggqhxescine" path="res://UI/SelectionCursor.tscn" id="8_5rrr5"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xylue"]
+texture = ExtResource("2_8rbpu")
+separation = Vector2i(1, 1)
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+0:1/0 = 0
+0:1/0/custom_data_0 = true
+0:2/0 = 0
+0:2/0/custom_data_0 = true
+0:3/0 = 0
+0:3/0/custom_data_0 = true
+1:3/0 = 0
+1:3/0/custom_data_0 = true
+2:3/0 = 0
+2:3/0/custom_data_0 = true
+2:2/0 = 0
+2:2/0/custom_data_0 = true
+1:2/0 = 0
+1:2/0/custom_data_0 = true
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+2:1/0 = 0
+2:1/0/custom_data_0 = true
+1:0/0 = 0
+1:0/0/custom_data_0 = true
+2:0/0 = 0
+2:0/0/custom_data_0 = true
+
+[sub_resource type="TileSet" id="TileSet_tj5wv"]
+custom_data_layer_0/name = "is_walkable"
+custom_data_layer_0/type = 1
+sources/1 = SubResource("TileSetAtlasSource_xylue")
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_ienac")
+SelectionCursorScene = ExtResource("8_5rrr5")
+
+[node name="HighlightManager" parent="." instance=ExtResource("3_ienac")]
+
+[node name="GridManager" parent="." instance=ExtResource("2_5rrr5")]
+unique_name_in_owner = true
+
+[node name="TileMapLayer" type="TileMapLayer" parent="GridManager"]
+z_index = -1
+tile_map_data = PackedByteArray("AAAAAAAAAQAAAAEAAAABAAAAAQABAAEAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQABAAEAAAAFAAAAAQABAAEAAAAGAAAAAQACAAEAAAAAAAEAAQAAAAIAAAAAAAIAAQAAAAIAAAAAAAMAAQAAAAIAAAAGAAEAAQACAAIAAAAGAAIAAQACAAIAAAAGAAMAAQACAAIAAAAGAAQAAQACAAIAAAAGAAUAAQACAAMAAAAFAAUAAQABAAMAAAAEAAUAAQABAAMAAAADAAUAAQABAAMAAAACAAUAAQABAAMAAAABAAUAAQABAAMAAAAAAAUAAQAAAAMAAAAAAAQAAQAAAAIAAAADAAQAAQABAAIAAAACAAQAAQABAAIAAAABAAQAAQABAAIAAAABAAMAAQABAAIAAAABAAIAAQABAAIAAAABAAEAAQABAAIAAAACAAEAAQABAAIAAAADAAEAAQABAAIAAAAEAAEAAQABAAIAAAAEAAIAAQABAAIAAAADAAIAAQABAAIAAAACAAIAAQABAAIAAAACAAMAAQABAAIAAAADAAMAAQABAAIAAAAEAAMAAQABAAIAAAAEAAQAAQABAAIAAAAFAAQAAQABAAIAAAAFAAMAAQABAAIAAAAFAAIAAQABAAIAAAAFAAEAAQABAAIAAAA=")
+tile_set = SubResource("TileSet_tj5wv")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(64, 48)
+zoom = Vector2(2, 2)
+
+[node name="Units" type="Node2D" parent="."]
+
+[node name="PlayerGroup" type="Node2D" parent="Units"]
+unique_name_in_owner = true
+script = ExtResource("5_or7tv")
+
+[node name="Infantary" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(48, 80)
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")
+
+[node name="Infantary2" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(64, 80)
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")
+
+[node name="Infantary3" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(32, 80)
+GridManager = NodePath("../../../GridManager")
+HighlightManager = NodePath("../../../HighlightManager")
+
+[node name="EnemyGroup" type="Node2D" parent="Units"]
+unique_name_in_owner = true
+script = ExtResource("5_or7tv")

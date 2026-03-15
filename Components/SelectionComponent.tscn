@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqrmdy03c1j04"]
+
+[ext_resource type="Script" uid="uid://b0eana1xvhwup" path="res://Components/SelectionComponent.cs" id="1_lpd7t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gxyuf"]
+size = Vector2(16, 16)
+
+[node name="SelectionComponent" type="Area2D"]
+script = ExtResource("1_lpd7t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, 8)
+shape = SubResource("RectangleShape2D_gxyuf")

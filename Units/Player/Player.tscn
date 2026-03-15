@@ -1,0 +1,15 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1802fc2ktcu2"]
+
+[ext_resource type="PackedScene" uid="uid://jcvdtdlhuaqy" path="res://Units/Unit.tscn" id="1_uyef1"]
+[ext_resource type="Script" uid="uid://b2ccke7jus0de" path="res://Units/Player/Player.cs" id="2_v6miv"]
+[ext_resource type="AudioStream" uid="uid://yf73lv22a5hk" path="res://Assets/SFX/WrongAction.mp3" id="3_44tve"]
+[ext_resource type="PackedScene" uid="uid://choqfu1775iy2" path="res://Components/HighlightComponent.tscn" id="3_p1rjy"]
+
+[node name="Player" instance=ExtResource("1_uyef1")]
+script = ExtResource("2_v6miv")
+
+[node name="HighlightComponent" parent="." index="2" instance=ExtResource("3_p1rjy")]
+
+[node name="WrongOptionSFX" type="AudioStreamPlayer" parent="." index="3"]
+unique_name_in_owner = true
+stream = ExtResource("3_44tve")

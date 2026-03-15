@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdqirm784ymbw"]
+
+[ext_resource type="PackedScene" uid="uid://b1802fc2ktcu2" path="res://Units/Player/Player.tscn" id="1_ts5jb"]
+[ext_resource type="Texture2D" uid="uid://cc288ffrqiiqb" path="res://Assets/Sprites/Infantary.png" id="2_pdh7u"]
+
+[node name="Infantary" instance=ExtResource("1_ts5jb")]
+
+[node name="Sprite2D" parent="." index="4"]
+texture = ExtResource("2_pdh7u")

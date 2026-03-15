@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpvp5nwiyicnl"]
+
+[ext_resource type="Script" uid="uid://0ynjk4q684ns" path="res://Managers/UnitGroupManager.cs" id="1_yusi0"]
+
+[node name="UnitGroupManager" type="Node2D"]
+script = ExtResource("1_yusi0")

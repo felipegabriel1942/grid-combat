@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://choqfu1775iy2"]
+
+[ext_resource type="Script" uid="uid://ckx2ftcicka87" path="res://Components/HighlightComponent.cs" id="1_4k56g"]
+
+[node name="HighlightComponent" type="Node2D"]
+script = ExtResource("1_4k56g")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dw2kqe8bh7n44"]
+
+[ext_resource type="Script" uid="uid://ym5673pof3i8" path="res://Components/EnemyIA.cs" id="1_30d5v"]
+
+[node name="EnemyIA" type="Node"]
+script = ExtResource("1_30d5v")

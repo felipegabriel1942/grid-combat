@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3kml02k4iqpj"]
+
+[ext_resource type="Script" uid="uid://d3txcv5o1x1e3" path="res://Managers/HighlightManager.cs" id="1_l0p0r"]
+
+[node name="HighlightManager" type="Node2D"]
+script = ExtResource("1_l0p0r")

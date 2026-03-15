@@ -1,0 +1,16 @@
+[gd_scene load_steps=5 format=3 uid="uid://ckd62omj85rt4"]
+
+[ext_resource type="PackedScene" uid="uid://jcvdtdlhuaqy" path="res://Units/Unit.tscn" id="1_m33xm"]
+[ext_resource type="Script" uid="uid://lf4vxsyc5h6u" path="res://Units/Enemy/Enemy.cs" id="2_18pak"]
+[ext_resource type="PackedScene" uid="uid://dw2kqe8bh7n44" path="res://Components/EnemyIA.tscn" id="2_dndr3"]
+[ext_resource type="Texture2D" uid="uid://cc288ffrqiiqb" path="res://Assets/Sprites/Infantary.png" id="2_rpvlr"]
+
+[node name="EnemyInfantary" instance=ExtResource("1_m33xm")]
+script = ExtResource("2_18pak")
+
+[node name="EnemyIA" parent="." index="0" instance=ExtResource("2_dndr3")]
+
+[node name="Sprite2D" type="Sprite2D" parent="." index="1"]
+texture = ExtResource("2_rpvlr")
+centered = false
+flip_h = true

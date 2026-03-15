@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://jcvdtdlhuaqy"]
+
+[ext_resource type="Texture2D" uid="uid://djlajt7gew7pn" path="res://Assets/Sprites/Ghost.png" id="2_5rqvx"]
+[ext_resource type="PackedScene" uid="uid://bywecbwyc3dag" path="res://Components/MovementComponent.tscn" id="2_7wytu"]
+[ext_resource type="PackedScene" uid="uid://bqrmdy03c1j04" path="res://Components/SelectionComponent.tscn" id="3_5rqvx"]
+
+[node name="Unit" type="Node2D"]
+
+[node name="MovementComponent" parent="." instance=ExtResource("2_7wytu")]
+
+[node name="SelectionComponent" parent="." instance=ExtResource("3_5rqvx")]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_5rqvx")
+centered = false
