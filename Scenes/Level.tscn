@@ -66,18 +66,21 @@ zoom = Vector2(2, 2)
 unique_name_in_owner = true
 script = ExtResource("5_or7tv")
 
-[node name="Infantary" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
-position = Vector2(48, 80)
+[node name="Infantary" parent="Units/PlayerGroup" node_paths=PackedStringArray("EnemyGroup", "GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(48, 48)
+EnemyGroup = NodePath("../../EnemyGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")
 
-[node name="Infantary2" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
-position = Vector2(64, 80)
+[node name="Infantary2" parent="Units/PlayerGroup" node_paths=PackedStringArray("EnemyGroup", "GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(64, 48)
+EnemyGroup = NodePath("../../EnemyGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")
 
-[node name="Infantary3" parent="Units/PlayerGroup" node_paths=PackedStringArray("GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
-position = Vector2(32, 80)
+[node name="Infantary3" parent="Units/PlayerGroup" node_paths=PackedStringArray("EnemyGroup", "GridManager", "HighlightManager") instance=ExtResource("3_tj5wv")]
+position = Vector2(32, 32)
+EnemyGroup = NodePath("../../EnemyGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")
 
@@ -86,19 +89,19 @@ unique_name_in_owner = true
 script = ExtResource("5_or7tv")
 
 [node name="EnemyInfantary" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
-position = Vector2(32, 0)
+position = Vector2(32, 16)
 PlayerGroup = NodePath("../../PlayerGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")
 
 [node name="EnemyInfantary2" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
-position = Vector2(48, 0)
+position = Vector2(48, 16)
 PlayerGroup = NodePath("../../PlayerGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")
 
 [node name="EnemyInfantary3" parent="Units/EnemyGroup" node_paths=PackedStringArray("PlayerGroup", "GridManager", "HighlightManager") instance=ExtResource("8_or7tv")]
-position = Vector2(64, 0)
+position = Vector2(64, 16)
 PlayerGroup = NodePath("../../PlayerGroup")
 GridManager = NodePath("../../../GridManager")
 HighlightManager = NodePath("../../../HighlightManager")

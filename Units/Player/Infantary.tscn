@@ -1,9 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://cdqirm784ymbw"]
+[gd_scene load_steps=5 format=3 uid="uid://cdqirm784ymbw"]
 
 [ext_resource type="PackedScene" uid="uid://b1802fc2ktcu2" path="res://Units/Player/Player.tscn" id="1_ts5jb"]
 [ext_resource type="Texture2D" uid="uid://cc288ffrqiiqb" path="res://Assets/Sprites/Infantary.png" id="2_pdh7u"]
+[ext_resource type="Texture2D" uid="uid://fphicalcj48l" path="res://Assets/Sprites/Equipments/Sword.png" id="3_n0o3d"]
+[ext_resource type="Texture2D" uid="uid://cqnfrvhssfq2a" path="res://Assets/Sprites/Equipments/Shield.png" id="4_q6mlv"]
 
 [node name="Infantary" instance=ExtResource("1_ts5jb")]
 
 [node name="Sprite2D" parent="." index="4"]
+position = Vector2(2, 3)
 texture = ExtResource("2_pdh7u")
+
+[node name="Sword" type="Sprite2D" parent="." index="5"]
+position = Vector2(13, 10)
+rotation = 0.431411
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_n0o3d")
+
+[node name="Shield" type="Sprite2D" parent="." index="6"]
+position = Vector2(4, 12)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_q6mlv")

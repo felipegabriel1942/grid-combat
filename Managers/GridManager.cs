@@ -13,7 +13,6 @@ public partial class GridManager : Node
 
     public override void _Ready()
     {
-
         _tileMap = GetChild<TileMapLayer>(0);
 
         _grid = new AStarGrid2D()
@@ -45,7 +44,6 @@ public partial class GridManager : Node
         Performance: For large ranges, this is faster than calculating paths to every single cell.
         Diagonal Movement: If astarGrid.DiagonalMode is set to Never, you may need to adjust the logic to ensure connectivity.
     */
-
     public List<Vector2I> GetMovableCellsInRange(Vector2 center, int range)
     {
         List<Vector2I> reachableCells = new List<Vector2I>();
@@ -77,6 +75,34 @@ public partial class GridManager : Node
         return reachableCells;
     }
 
+    public List<Vector2I> GetAttackCellsInRange(Vector2 center, int range)
+    {
+        List<Vector2I> reachableCells = new List<Vector2I>();
+
+        Rect2I region = _grid.Region;
+
+        for (int x = LocalToMap(center).X - range; x <= LocalToMap(center).X + range; x++)
+        {
+            for (int y = LocalToMap(center).Y - range; y <= LocalToMap(center).Y + range; y++)
+            {
+                Vector2I cell = new Vector2I(x, y);
+
+                // 1. Check if inside grid boundaries
+                if (region.HasPoint(cell))
+                {
+                    // 2. Optional: Calculate distance for circular/Manhattan range
+                    if (Mathf.Abs(x - LocalToMap(center).X) + Mathf.Abs(y - LocalToMap(center).Y) <= range)
+                    {
+                        reachableCells.Add(cell);
+                    }
+   
+                }
+            }
+        }
+
+        return reachableCells;
+    }
+
     public bool IsCellOccupied(Vector2 cellPosition)
     {
         return _grid.IsPointSolid(LocalToMap(cellPosition));
@@ -95,11 +121,13 @@ public partial class GridManager : Node
     public void SetCellAsOccupied(Vector2 cellPosition)
     {
         _grid.SetPointSolid(LocalToMap(cellPosition), true);
+        _grid.Update();
     }
 
     public void SetCellAsFree(Vector2 cellPosition)
     {
         _grid.SetPointSolid(LocalToMap(cellPosition), false);
+        _grid.Update();
     }
 
     private static readonly Vector2I[] Directions4 =

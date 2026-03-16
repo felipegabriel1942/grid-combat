@@ -17,15 +17,21 @@ public class EnemyTurnState : IBattleState
     {
         GD.Print("Begin enemy turn!");
 
+        if (_level.EnemyGroup.Units.Count == 0)
+        {
+            _level.StateMachine.ChangeState(new WinState(_level));
+        }
+
         foreach (var unit in _level.EnemyGroup.Units)
         {
-           unit.SetMovedToFalse();
+           unit.Moved = false;
+           unit.Attacked = false;
         }
 
         foreach (var unit in _level.EnemyGroup.Units)
         {
             await unit.AwaitTime(2);
-            unit.Move();
+            unit.AttackOrMove();
         }
     }
 

@@ -10,12 +10,28 @@ public abstract partial class Unit : Node2D
 
     [Signal]
     public delegate void UnitHasMovedEventHandler();
+
+    [Signal]
+    public delegate void UnitHasAttackedEventHandler();
+
+    [Signal]
+    public delegate void UnitHasDiedEventHandler(Unit unit);
     
     [Export]
     public GridManager GridManager { private set; get; }
 
     [Export]
     public HighlightManager HighlightManager { private set; get; }
+
+    [Export]
+    public int AttackRange = 1;
+
+    [Export]
+    public int MovementRange = 1;
+
+    public bool Moved = false;
+
+    public bool Attacked = false;
 
     protected MovementComponent _movementComponent;
     private SelectionComponent _selectionComponent;
@@ -33,23 +49,26 @@ public abstract partial class Unit : Node2D
         GridManager.SetCellAsOccupied(GlobalPosition);
     }
 
-    public bool HasMoved()
-    {
-        return _movementComponent.Moved;
-    }
-
     public abstract void OnSelection();
 
-    public abstract void Move();
+    public abstract void AttackOrMove();
 
-    public void SetMovedToFalse()
-    {
-        _movementComponent.Moved = false;
-    }
+    public abstract void Attack(Unit target);
+
+    public abstract void Move();
 
     public async Task AwaitTime(float time)
     {
         await ToSignal(GetTree().CreateTimer(time), Timer.SignalName.Timeout);
+    }
+
+    public abstract void TakeDamage(int damage);
+
+    public void Die()
+    {
+        GridManager.SetCellAsFree(GlobalPosition);
+        EmitSignal(SignalName.UnitHasDied, this);
+        QueueFree();
     }
     
 }

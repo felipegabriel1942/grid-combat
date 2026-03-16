@@ -17,9 +17,15 @@ public class PlayerTurnState : IBattleState
     {
         GD.Print("Begin player turn!");
 
+        if (_level.PlayerGroup.Units.Count == 0)
+        {
+            _level.StateMachine.ChangeState(new LoseState(_level));
+        }
+
         foreach (var unit in _level.PlayerGroup.Units)
         {
-           unit.SetMovedToFalse();
+           unit.Moved = false;
+           unit.Attacked = false;
         }
     }
 

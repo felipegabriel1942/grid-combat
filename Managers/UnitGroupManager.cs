@@ -11,6 +11,9 @@ public partial class UnitGroupManager : Node2D
     [Signal]
     public delegate void AllUnitsMovedEventHandler();
 
+    [Signal]
+    public delegate void AllUnitsDiedEventHandler();
+
     public List<Unit> Units;
 
     public override void _Ready()
@@ -19,17 +22,29 @@ public partial class UnitGroupManager : Node2D
 
         foreach (Unit unit in Units)
         {
-            unit.UnitHasMoved += CheckIfAllUnitsMoved;
+            unit.UnitHasMoved += CheckIfAllUnitsActed;
+            unit.UnitHasAttacked += CheckIfAllUnitsActed;
+            unit.UnitHasDied += RemoveDeadUnit;
         }
     }
 
-    private void CheckIfAllUnitsMoved()
+    private void RemoveDeadUnit(Unit unit)
     {
-        var unitNotMoved = Units
-            .Where(u => !u.HasMoved())
+        Units.Remove(unit);
+
+        if (Units.Count == 0)
+        {
+            EmitSignal(SignalName.AllUnitsDied);
+        }
+    }
+
+    private void CheckIfAllUnitsActed()
+    {
+        var unitActed = Units
+            .Where(u => u.Moved && u.Attacked)
             .ToList();
 
-        if (unitNotMoved.Count == 0)
+        if (unitActed.Count == Units.Count)
         {
             EmitSignal(SignalName.AllUnitsMoved);
         }

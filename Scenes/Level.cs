@@ -14,12 +14,14 @@ public partial class Level : Node2D
     private PackedScene SelectionCursorScene;
 
     public Unit SelectedUnit {private set; get; }
+
+    public BattleStateMachine StateMachine;
     
     public UnitGroupManager PlayerGroup;
     public UnitGroupManager EnemyGroup;
+
     private GridManager _gridManager;
     private SelectionCursor _selectionCursor;
-    private BattleStateMachine _battleStateMachine;
     private Unit _selectedUnit;
 
     public override void _Ready()
@@ -28,14 +30,27 @@ public partial class Level : Node2D
         PlayerGroup = GetNode<UnitGroupManager>("%PlayerGroup");
         EnemyGroup = GetNode<UnitGroupManager>("%EnemyGroup");
 
-        _battleStateMachine = new BattleStateMachine(this);
-        _battleStateMachine.ChangeState(new PlayerTurnState(this));
+        StateMachine = new BattleStateMachine(this);
+        StateMachine.ChangeState(new PlayerTurnState(this));
 
         PlayerGroup.AllUnitsMoved += OnAllPlayerUnitsMoved;
         EnemyGroup.AllUnitsMoved += OnAllEnemyUnitsMoved;
 
+        PlayerGroup.AllUnitsDied += OnAllPlayerUnitsDied;
+        EnemyGroup.AllUnitsDied += OnAllEnemyUnitsDied;
+
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitSelected, Callable.From<Unit>(OnUnitSelected));
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitMoved, Callable.From<Unit>(OnUnitMoved));
+    }
+
+    private void OnAllEnemyUnitsDied()
+    {
+        StateMachine.ChangeState(new WinState(this));
+    }
+
+    private void OnAllPlayerUnitsDied()
+    {
+        StateMachine.ChangeState(new LoseState(this));
     }
 
     public override void _Process(double delta)
@@ -47,24 +62,24 @@ public partial class Level : Node2D
     {
         GD.Print("All enemy units have moved.");
 
-        _battleStateMachine.ChangeState(new PlayerTurnState(this));
+        StateMachine.ChangeState(new PlayerTurnState(this));
     }
 
     private void OnAllPlayerUnitsMoved()
     {
         GD.Print("All player units have moved.");
 
-        _battleStateMachine.ChangeState(new EnemyTurnState(this));
+        StateMachine.ChangeState(new EnemyTurnState(this));
     }
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        _battleStateMachine.CurrentState?.UnhandledInput(@event);
+        StateMachine.CurrentState?.UnhandledInput(@event);
     }
 
     public override void _PhysicsProcess(double delta)
     {    
-        _battleStateMachine.CurrentState.PhysicsProcess(delta);
+        StateMachine.CurrentState.PhysicsProcess(delta);
 
         if (_selectionCursor != null)
         {
@@ -74,7 +89,7 @@ public partial class Level : Node2D
 
     private void OnSelectionCursorClick()
     {
-        _selectedUnit.Move();
+        _selectedUnit.AttackOrMove();
     }
 
     private void OnUnitMoved(Unit unit)
@@ -86,7 +101,7 @@ public partial class Level : Node2D
     {
         _selectedUnit = unit;
 
-        if (!_selectedUnit.HasMoved())
+        if (!_selectedUnit.Moved || !_selectedUnit.Attacked)
         {
             InstantiateSelectionCursor();
         }
