@@ -1,17 +1,51 @@
-[gd_scene load_steps=4 format=3 uid="uid://jcvdtdlhuaqy"]
+[gd_scene load_steps=9 format=3 uid="uid://jcvdtdlhuaqy"]
 
 [ext_resource type="Texture2D" uid="uid://djlajt7gew7pn" path="res://Assets/Sprites/Ghost.png" id="2_5rqvx"]
 [ext_resource type="PackedScene" uid="uid://bywecbwyc3dag" path="res://Components/MovementComponent.tscn" id="2_7wytu"]
+[ext_resource type="PackedScene" uid="uid://dxamghpfqng58" path="res://Components/AnimationComponent.tscn" id="2_lvaes"]
 [ext_resource type="PackedScene" uid="uid://bqrmdy03c1j04" path="res://Components/SelectionComponent.tscn" id="3_5rqvx"]
+[ext_resource type="Texture2D" uid="uid://bg16e6d3beohw" path="res://Assets/UI/HealthEmpty.png" id="4_amrl3"]
+[ext_resource type="Texture2D" uid="uid://bxa85jo3tkx1q" path="res://Assets/UI/HealthFilled.png" id="5_b5nw7"]
+[ext_resource type="Texture2D" uid="uid://e14poy4wn4jw" path="res://Assets/Sprites/CharacterShadow.png" id="6_b5nw7"]
+[ext_resource type="AudioStream" uid="uid://c4ldyw176jx7q" path="res://Assets/SFX/DeathSound.mp3" id="8_6i1u2"]
 
 [node name="Unit" type="Node2D"]
 
 [node name="MovementComponent" parent="." instance=ExtResource("2_7wytu")]
 
+[node name="AnimationComponent" parent="." instance=ExtResource("2_lvaes")]
+
 [node name="SelectionComponent" parent="." instance=ExtResource("3_5rqvx")]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="HealthContainer" type="Node2D" parent="."]
+
+[node name="HealthFilled2" type="Sprite2D" parent="HealthContainer"]
+position = Vector2(8, 2)
+texture = ExtResource("5_b5nw7")
+
+[node name="HealthFilled" type="Sprite2D" parent="HealthContainer"]
+position = Vector2(3, 2)
+texture = ExtResource("5_b5nw7")
+
+[node name="HealthEmpty" type="Sprite2D" parent="HealthContainer"]
+position = Vector2(13, 2)
+texture = ExtResource("4_amrl3")
+
+[node name="WeaponSound" type="AudioStreamPlayer" parent="."]
+
+[node name="SpritesContainer" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpritesContainer"]
 position = Vector2(2, 4)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("2_5rqvx")
 centered = false
+
+[node name="CharacterShadow" type="Sprite2D" parent="SpritesContainer"]
+z_index = -1
+position = Vector2(8, 15)
+scale = Vector2(0.72, 1)
+texture = ExtResource("6_b5nw7")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_6i1u2")

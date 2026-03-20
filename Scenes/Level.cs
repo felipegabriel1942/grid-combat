@@ -23,6 +23,7 @@ public partial class Level : Node2D
     private GridManager _gridManager;
     private SelectionCursor _selectionCursor;
     private Unit _selectedUnit;
+    private bool _inputBlocked = false;
 
     public override void _Ready()
     {
@@ -41,6 +42,14 @@ public partial class Level : Node2D
 
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitSelected, Callable.From<Unit>(OnUnitSelected));
         GameEvents.Instance.Connect(GameEvents.SignalName.UnitMoved, Callable.From<Unit>(OnUnitMoved));
+        GameEvents.Instance.Connect(GameEvents.SignalName.ChangeInputBlockStatus, Callable.From<bool>(OnBlockInputStatusChange));
+    }
+
+    private void OnBlockInputStatusChange(bool isBlocked)
+    {
+        _inputBlocked = isBlocked;
+
+        RemoveSelectionCursor();
     }
 
     private void OnAllEnemyUnitsDied()
@@ -58,16 +67,20 @@ public partial class Level : Node2D
         QueueRedraw();
     }
 
-    private void OnAllEnemyUnitsMoved()
+    private async void OnAllEnemyUnitsMoved()
     {
         GD.Print("All enemy units have moved.");
+
+        await ToSignal(GetTree().CreateTimer(5f), Timer.SignalName.Timeout);
 
         StateMachine.ChangeState(new PlayerTurnState(this));
     }
 
-    private void OnAllPlayerUnitsMoved()
+    private async void OnAllPlayerUnitsMoved()
     {
         GD.Print("All player units have moved.");
+
+        await ToSignal(GetTree().CreateTimer(5f), Timer.SignalName.Timeout);
 
         StateMachine.ChangeState(new EnemyTurnState(this));
     }
@@ -89,6 +102,9 @@ public partial class Level : Node2D
 
     private void OnSelectionCursorClick()
     {
+        if (_inputBlocked)
+            return;
+
         _selectedUnit.AttackOrMove();
     }
 
@@ -99,6 +115,9 @@ public partial class Level : Node2D
 
     private void OnUnitSelected(Unit unit)
     {
+        if (_inputBlocked)
+            return;
+            
         _selectedUnit = unit;
 
         if (!_selectedUnit.Moved || !_selectedUnit.Attacked)
@@ -118,8 +137,14 @@ public partial class Level : Node2D
 
     private void RemoveSelectionCursor()
     {
+        if (_selectionCursor == null)
+        {
+            return;
+        }
+
         _selectionCursor.SelectionCursorClicked -= OnSelectionCursorClick;
         RemoveChild(_selectionCursor);
+        _selectionCursor = null;
     }
 
 }

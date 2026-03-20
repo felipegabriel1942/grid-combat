@@ -19,7 +19,7 @@ public partial class Enemy : Unit
         _enemyIA = GetNode<EnemyIA>("EnemyIA");
     }
 
-    public override void Move()
+    public override async void Move()
     {
         Unit targetUnit = _enemyIA.GetTargetUnit();
 
@@ -27,14 +27,30 @@ public partial class Enemy : Unit
 
         if (targetPosition.X >= 0 && targetPosition.Y >= 0)
         {
+            if (targetPosition.X < Position.X)
+            {
+                FlipUnit("Left");
+            } else
+            {
+                FlipUnit("Right");
+            }
+
             GridManager.SetCellAsFree(GlobalPosition);
-            _movementComponent.Move(targetPosition);
+            await _movementComponent.Move(targetPosition);
             GridManager.SetCellAsOccupied(targetPosition);
         }
 
         if (!ExistsEnemyNear())
         {
             Attacked = true;
+        } else
+        {
+            Unit attackTarget = GetAttackTarget();
+
+            if (attackTarget != null)
+            {
+                Attack(attackTarget);
+            }
         }
 
         Moved = true;
@@ -88,25 +104,51 @@ public partial class Enemy : Unit
     public override void AttackOrMove()
     {
         Move();
-
-        Unit attackTarget = GetAttackTarget();
-
-        if (attackTarget != null)
-        {
-            Attack(attackTarget);
-        }
     }
 
     public override void Attack(Unit target)
     {
-        target.TakeDamage(1);
+        _player = target;
+
+        if (_player.Position.X < Position.X)
+        {
+            FlipUnit("Left");
+        } else
+        {
+            FlipUnit("Right");
+        }
+
+        _animationComponent.PlayAttack();
         Attacked = true;
         Moved = true;
         EmitSignal(Unit.SignalName.UnitHasAttacked);
     }
 
-    public override void TakeDamage(int damage)
+    public override async void TakeDamage(int damage)
     {
-        Die();
+        CurrentHealth -= damage;
+
+        await _animationComponent.PlayHurt();
+
+        if (CurrentHealth < 0)
+        {
+            Die();
+        } else
+        {
+            
+        }
+    }
+
+    public override void PlayWeaponSound()
+    {
+        _weaponSound.Play();
+    }
+
+    private Unit _player; 
+
+    public void HurtPlayer()
+    {
+        _player.TakeDamage(1);
+        // _enemy = null;
     }
 }

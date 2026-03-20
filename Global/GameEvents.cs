@@ -27,6 +27,9 @@ public partial class GameEvents : Node
     [Signal]
     public delegate void UnitMovedEventHandler(Unit unit);
 
+    [Signal]
+    public delegate void ChangeInputBlockStatusEventHandler(bool isBlocked);
+
     public static void EmitHighlightCell(Vector2 cell, Color color)
     {
         Instance.EmitSignal(SignalName.HighlightCell, cell, color);
@@ -45,5 +48,10 @@ public partial class GameEvents : Node
     public static void EmitUnitMoved(Unit unit)
     {
         Instance.EmitSignal(SignalName.UnitMoved, unit);
+    }
+
+    public static void EmitChangeInputBlockStatus(bool isBlocked)
+    {
+        Instance.EmitSignal(SignalName.ChangeInputBlockStatus, isBlocked);
     }
 }

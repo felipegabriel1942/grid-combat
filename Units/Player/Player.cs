@@ -1,9 +1,9 @@
-
-using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using GridCombat.Global;
 using GridCombat.Managers;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GridCombat.Units.Player;
 
@@ -25,14 +25,6 @@ public partial class Player : Unit
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
-
-        if (Moved && Attacked)
-        {
-            _sprite2D.Modulate = new Color(0.5f, 0.5f, 0.5f, 1);
-        } else
-        {
-            _sprite2D.Modulate = new Color(1f, 1f, 1f, 1);
-        }
     }
 
     public override void AttackOrMove()
@@ -87,28 +79,64 @@ public partial class Player : Unit
         return false;
     }
 
-    public override void Attack(Unit unit)
+
+    private Unit _enemy; 
+
+    public override async void Attack(Unit unit)
     {
-        unit.TakeDamage(1);
+        _enemy = unit;
+
+        if (_enemy.Position.X < Position.X)
+        {
+            FlipUnit("Left");
+        } else
+        {
+            FlipUnit("Right");
+        }
+
+        _animationComponent.PlayAttack();
+        
         _isSelected = false;
         Attacked = true;
         Moved = true;
         EmitSignal(Unit.SignalName.UnitHasAttacked);
         GameEvents.EmitUnitMoved(this);
         GameEvents.EmitClearHighlights();
+        ChangeSpritesColor();
     }
 
-    public override void Move()
+    public void HurtEnemy()
     {
-       var targetCell = GetTargetPosition();
+        _enemy.TakeDamage(1);
+    }
 
-       if (targetCell.X >= 0 && targetCell.Y >= 0)
+    public override async void Move()
+    {
+        if (Moved)
+        {
+            return;
+        }
+
+        var targetCell = GetTargetPosition();
+
+        if (targetCell.X >= 0 && targetCell.Y >= 0)
         {
             Moved = true;
             _isSelected = false;
 
+            if (targetCell.X < Position.X)
+            {
+                FlipUnit("Left");
+            } else
+            {
+                FlipUnit("Right");
+            }
+
             GridManager.SetCellAsFree(GlobalPosition);
-            _movementComponent.Move(targetCell);
+            GameEvents.EmitClearHighlights();
+            GameEvents.EmitChangeInputBlockStatus(true);
+            await _movementComponent.Move(targetCell);
+            GameEvents.EmitChangeInputBlockStatus(false);
             GridManager.SetCellAsOccupied(targetCell);
 
             EmitSignal(Unit.SignalName.UnitHasMoved);
@@ -120,7 +148,8 @@ public partial class Player : Unit
             }
             
             GameEvents.EmitUnitMoved(this);
-            GameEvents.EmitClearHighlights();
+            
+            ChangeSpritesColor();
         }
     }
 
@@ -209,8 +238,41 @@ public partial class Player : Unit
         }
     }
 
-    public override void TakeDamage(int damage)
+    public override async void TakeDamage(int damage)
     {
-        Die();
+        CurrentHealth -= damage;
+
+        await _animationComponent.PlayHurt();
+
+        if (CurrentHealth < 0)
+        {
+            Die();
+        } else
+        {
+            
+        }
+    }
+
+    public override void PlayWeaponSound()
+    {
+        _weaponSound.Play();
+    }
+
+    public async void ChangeSpritesColor()
+    {
+        await AwaitTime(1.5f);
+        foreach(var child in _spritesContainer.GetChildren())
+        {
+            if (child is Sprite2D sprite)
+            {
+                if (Moved && Attacked)
+                {
+                    sprite.Modulate = new Color(0.5f, 0.5f, 0.5f, 1);
+                } else
+                {
+                    sprite.Modulate = new Color(1f, 1f, 1f, 1);
+                }
+            }
+        }
     }
 }

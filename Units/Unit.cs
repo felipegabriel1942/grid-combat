@@ -29,24 +29,38 @@ public abstract partial class Unit : Node2D
     [Export]
     public int MovementRange = 1;
 
+    [Export]
+    public int Health = 3;
+
     public bool Moved = false;
 
     public bool Attacked = false;
 
+    public int CurrentHealth;
+
     protected MovementComponent _movementComponent;
-    private SelectionComponent _selectionComponent;
-    protected Sprite2D _sprite2D;
+    protected SelectionComponent _selectionComponent;
+    protected AnimationComponent _animationComponent;
+    protected AudioStreamPlayer _weaponSound;
+    protected AudioStreamPlayer _deathSound;
+    protected Node2D _spritesContainer;
+
     protected bool _isSelected;
    
     public override void _Ready()
     {
         _movementComponent = GetNode<MovementComponent>("MovementComponent");
         _selectionComponent = GetNode<SelectionComponent>("SelectionComponent");
-        _sprite2D = GetNode<Sprite2D>("Sprite2D");
+        _animationComponent = GetNode<AnimationComponent>("AnimationComponent");
+        _weaponSound = GetNode<AudioStreamPlayer>("WeaponSound");
+        _deathSound = GetNode<AudioStreamPlayer>("DeathSound");
+        _spritesContainer = GetNode<Node2D>("SpritesContainer");
 
         _selectionComponent.Selected += OnSelection;
 
         GridManager.SetCellAsOccupied(GlobalPosition);
+
+        CurrentHealth = Health;
     }
 
     public abstract void OnSelection();
@@ -64,11 +78,29 @@ public abstract partial class Unit : Node2D
 
     public abstract void TakeDamage(int damage);
 
-    public void Die()
+    public async void Die()
     {
         GridManager.SetCellAsFree(GlobalPosition);
         EmitSignal(SignalName.UnitHasDied, this);
+        _deathSound.Play();
+        await ToSignal(_deathSound, AudioStreamPlayer.SignalName.Finished);
         QueueFree();
+    }
+
+    public abstract void PlayWeaponSound();
+
+    public void FlipUnit(string direction)
+    {
+        if (direction == "Left")
+        {
+            _spritesContainer.Scale = new Vector2(-1, 1);
+            _spritesContainer.Position = new Vector2(16, 0);
+        } else
+        {
+            _spritesContainer.Scale = new Vector2(1, 1);
+            _spritesContainer.Position = new Vector2(0, 0);
+        }
+
     }
     
 }

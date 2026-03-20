@@ -1,5 +1,7 @@
 using Godot;
+using GridCombat.Global;
 using GridCombat.Scenes;
+using GridCombat.Units.Player;
 
 namespace GridCombat.StateMachines.States;
 
@@ -20,18 +22,20 @@ public class PlayerTurnState : IBattleState
         if (_level.PlayerGroup.Units.Count == 0)
         {
             _level.StateMachine.ChangeState(new LoseState(_level));
-        }
-
-        foreach (var unit in _level.PlayerGroup.Units)
-        {
-           unit.Moved = false;
-           unit.Attacked = false;
-        }
+        }  
     }
 
     public void Exit()
     {
-
+        foreach (var unit in _level.PlayerGroup.Units)
+        {
+            if (unit is Player player)
+            {
+                player.Moved = false;
+                player.Attacked = false;
+                player.ChangeSpritesColor();
+            }
+        }
     }
 
     public void PhysicsProcess(double delta)
