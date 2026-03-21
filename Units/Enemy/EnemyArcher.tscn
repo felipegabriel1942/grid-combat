@@ -1,0 +1,187 @@
+[gd_scene load_steps=11 format=3 uid="uid://ch4q1qk1x7iib"]
+
+[ext_resource type="PackedScene" uid="uid://ojoxrxai1hpc" path="res://Units/Enemy/Enemy.tscn" id="1_8lvqf"]
+[ext_resource type="Texture2D" uid="uid://bwmvfbofliwrg" path="res://Assets/Sprites/EnemyArcher.png" id="2_78uw7"]
+[ext_resource type="Texture2D" uid="uid://b7sher3nd3uwh" path="res://Assets/Sprites/Equipments/Bow.png" id="3_homkk"]
+[ext_resource type="Texture2D" uid="uid://bf1fcq157hwvs" path="res://Assets/Sprites/Equipments/Arrow.png" id="4_qvjms"]
+
+[sub_resource type="Animation" id="Animation_4icam"]
+resource_name = "Attack"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer/Bow:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(13, 12)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpritesContainer/Arrow:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.633333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [Vector2(13, 12), Vector2(10, 12), Vector2(20, 12)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpritesContainer/Arrow:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.3, 0.633333),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"PlayWeaponSound"
+}, {
+"args": [],
+"method": &"HurtPlayer"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_3s6cl"]
+resource_name = "Hurt"
+
+[sub_resource type="Animation" id="Animation_qvjms"]
+resource_name = "Idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer/Bow:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Vector2(13, 12), Vector2(14, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_tqx0n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer/Bow:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(13, 12)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpritesContainer/Arrow:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(13, 12)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpritesContainer/Arrow:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SpritesContainer:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_s82lf"]
+resource_name = "Death"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tqx0n"]
+_data = {
+&"Attack": SubResource("Animation_4icam"),
+&"Death": SubResource("Animation_s82lf"),
+&"Hurt": SubResource("Animation_3s6cl"),
+&"Idle": SubResource("Animation_qvjms"),
+&"RESET": SubResource("Animation_tqx0n")
+}
+
+[node name="EnemyArcher" instance=ExtResource("1_8lvqf")]
+AttackRange = 2
+MovementRange = 2
+Health = 1
+
+[node name="AnimationComponent" parent="." index="2" node_paths=PackedStringArray("_animationPlayer")]
+_animationPlayer = NodePath("../AnimationPlayer")
+
+[node name="Bow" type="Sprite2D" parent="SpritesContainer" index="0"]
+z_index = 1
+position = Vector2(13, 12)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_homkk")
+
+[node name="Sprite2D" parent="SpritesContainer" index="1"]
+texture = ExtResource("2_78uw7")
+
+[node name="Arrow" type="Sprite2D" parent="SpritesContainer" index="3"]
+visible = false
+z_index = 2
+position = Vector2(13, 12)
+rotation = 0.785398
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("4_qvjms")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
+libraries = {
+&"": SubResource("AnimationLibrary_tqx0n")
+}

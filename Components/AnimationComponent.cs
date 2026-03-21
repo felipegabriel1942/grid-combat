@@ -35,4 +35,10 @@ public partial class AnimationComponent : Node2D
 
         _animationPlayer.Play("Idle");
     }
+
+    public async void PlayDeath()
+    {
+        await ToSignal(GetTree().CreateTimer(0.3f), Timer.SignalName.Timeout);
+        _animationPlayer.Play("Death");
+    }
 }

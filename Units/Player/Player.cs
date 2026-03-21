@@ -242,14 +242,13 @@ public partial class Player : Unit
     {
         CurrentHealth -= damage;
 
+        UpdateHealthContainer();
+
         await _animationComponent.PlayHurt();
 
-        if (CurrentHealth < 0)
+        if (CurrentHealth <= 0)
         {
             Die();
-        } else
-        {
-            
         }
     }
 
@@ -274,5 +273,10 @@ public partial class Player : Unit
                 }
             }
         }
+    }
+
+    public override Texture2D GetHealthFilledTexture()
+    {
+        return GD.Load<Texture2D>("res://Assets/UI/HealthFilledBlue.png");
     }
 }

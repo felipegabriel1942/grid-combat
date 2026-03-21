@@ -128,14 +128,13 @@ public partial class Enemy : Unit
     {
         CurrentHealth -= damage;
 
+        UpdateHealthContainer();
+
         await _animationComponent.PlayHurt();
 
-        if (CurrentHealth < 0)
+        if (CurrentHealth <= 0)
         {
             Die();
-        } else
-        {
-            
         }
     }
 
@@ -149,6 +148,10 @@ public partial class Enemy : Unit
     public void HurtPlayer()
     {
         _player.TakeDamage(1);
-        // _enemy = null;
+    }
+
+    public override Texture2D GetHealthFilledTexture()
+    {
+        return GD.Load<Texture2D>("res://Assets/UI/HealthFilled.png");
     }
 }

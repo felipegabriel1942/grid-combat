@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cdqirm784ymbw"]
+[gd_scene load_steps=13 format=3 uid="uid://cdqirm784ymbw"]
 
 [ext_resource type="PackedScene" uid="uid://b1802fc2ktcu2" path="res://Units/Player/Player.tscn" id="1_ts5jb"]
 [ext_resource type="AudioStream" uid="uid://dwo51t1lqowsn" path="res://Assets/SFX/AttackHit.mp3" id="2_dhjvr"]
@@ -72,6 +72,22 @@ tracks/4/keys = {
 "args": [],
 "method": &"PlayWeaponSound"
 }]
+}
+
+[sub_resource type="Animation" id="Animation_u1c6p"]
+resource_name = "Death"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_dgp40"]
@@ -209,10 +225,23 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector2(2, 4)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("SpritesContainer:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dhjvr"]
 _data = {
 &"Attack": SubResource("Animation_a4eri"),
+&"Death": SubResource("Animation_u1c6p"),
 &"Hurt": SubResource("Animation_dgp40"),
 &"Idle": SubResource("Animation_q6mlv"),
 &"Move": SubResource("Animation_66rqd"),
@@ -224,13 +253,10 @@ _data = {
 [node name="AnimationComponent" parent="." index="1" node_paths=PackedStringArray("_animationPlayer")]
 _animationPlayer = NodePath("../AnimationPlayer")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="6"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="5"]
 libraries = {
 &"": SubResource("AnimationLibrary_dhjvr")
 }
-
-[node name="WeaponSound" parent="." index="7"]
-stream = ExtResource("2_dhjvr")
 
 [node name="Sprite2D" parent="SpritesContainer" index="0"]
 texture = ExtResource("2_pdh7u")
@@ -247,3 +273,6 @@ position = Vector2(13, 11)
 rotation = 0.431411
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_n0o3d")
+
+[node name="WeaponSound" parent="." index="8"]
+stream = ExtResource("2_dhjvr")

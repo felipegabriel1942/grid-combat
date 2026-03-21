@@ -16,7 +16,7 @@ public abstract partial class Unit : Node2D
 
     [Signal]
     public delegate void UnitHasDiedEventHandler(Unit unit);
-    
+
     [Export]
     public GridManager GridManager { private set; get; }
 
@@ -33,9 +33,7 @@ public abstract partial class Unit : Node2D
     public int Health = 3;
 
     public bool Moved = false;
-
     public bool Attacked = false;
-
     public int CurrentHealth;
 
     protected MovementComponent _movementComponent;
@@ -44,9 +42,10 @@ public abstract partial class Unit : Node2D
     protected AudioStreamPlayer _weaponSound;
     protected AudioStreamPlayer _deathSound;
     protected Node2D _spritesContainer;
+    protected Node2D _healthContainer;
 
     protected bool _isSelected;
-   
+
     public override void _Ready()
     {
         _movementComponent = GetNode<MovementComponent>("MovementComponent");
@@ -55,12 +54,15 @@ public abstract partial class Unit : Node2D
         _weaponSound = GetNode<AudioStreamPlayer>("WeaponSound");
         _deathSound = GetNode<AudioStreamPlayer>("DeathSound");
         _spritesContainer = GetNode<Node2D>("SpritesContainer");
+        _healthContainer = GetNode<Node2D>("HealthContainer");
 
         _selectionComponent.Selected += OnSelection;
 
         GridManager.SetCellAsOccupied(GlobalPosition);
 
         CurrentHealth = Health;
+
+        UpdateHealthContainer();
     }
 
     public abstract void OnSelection();
@@ -83,6 +85,7 @@ public abstract partial class Unit : Node2D
         GridManager.SetCellAsFree(GlobalPosition);
         EmitSignal(SignalName.UnitHasDied, this);
         _deathSound.Play();
+        _animationComponent.PlayDeath();
         await ToSignal(_deathSound, AudioStreamPlayer.SignalName.Finished);
         QueueFree();
     }
@@ -95,12 +98,38 @@ public abstract partial class Unit : Node2D
         {
             _spritesContainer.Scale = new Vector2(-1, 1);
             _spritesContainer.Position = new Vector2(16, 0);
-        } else
+        }
+        else
         {
             _spritesContainer.Scale = new Vector2(1, 1);
             _spritesContainer.Position = new Vector2(0, 0);
         }
 
     }
-    
+
+    public void UpdateHealthContainer()
+    {
+
+        foreach (var child in _healthContainer.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        for (int i = 0; i < Health; i++)
+        {
+            var sprite = new Sprite2D();
+
+            var texture = i < CurrentHealth ? GetHealthFilledTexture() : GD.Load<Texture2D>("res://Assets/UI/HealthEmpty.png");
+
+            sprite.Texture = texture;
+
+            sprite.GlobalPosition = new Vector2(5 + (i * 5), sprite.GlobalPosition.Y + 2);
+            sprite.ZIndex = 5;
+
+            _healthContainer.AddChild(sprite);
+        }
+    }
+
+
+    public abstract Texture2D GetHealthFilledTexture();
 }
